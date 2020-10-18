@@ -10,8 +10,9 @@ public class Grid : MonoBehaviour
     public LayerMask unwalkableMask;
     public Vector2 gridWorldSize;
     public float nodeRadius;
-    Node[,] grid;
+    public Node[,] grid;
     public bool unknownGrid;
+    public Node[,] unwalkableNodes;
 
     float nodeDiameter;
     int gridSizeX, gridSizeY;
@@ -21,6 +22,7 @@ public class Grid : MonoBehaviour
         nodeDiameter = nodeRadius * 2;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
+        unwalkableNodes = new Node[gridSizeX, gridSizeY];
         CreateGrid(unknownGrid);
     }
 
@@ -49,6 +51,7 @@ public class Grid : MonoBehaviour
                 }
                 else
                 {
+                    
                     walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask));
                 }
                 
@@ -76,6 +79,15 @@ public class Grid : MonoBehaviour
             }
         }
         return neighbours;
+    }
+
+
+    public Node AddUnwalkableNode(Vector3 position)
+    {
+        Node node = NodeFromWorldPoint(position);
+        node.walkable = false;
+        grid[node.gridX, node.gridY] = node;
+        return node;
     }
 
     public Node NodeFromWorldPoint(Vector3 worldPosition) {

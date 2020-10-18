@@ -9,6 +9,8 @@ public class Pathfinding : MonoBehaviour
    
     PathRequestManager requestManager;
     Grid grid;
+    private Heap<Node> openSet;
+
     void Awake() {
         requestManager = GetComponent<PathRequestManager>();
         grid = GetComponent<Grid>();
@@ -18,7 +20,7 @@ public class Pathfinding : MonoBehaviour
         StartCoroutine(FindPath(startPos, targetPos));
     }
 
-    IEnumerator  FindPath(Vector3 startPos, Vector3 targetPos) {
+    IEnumerator FindPath(Vector3 startPos, Vector3 targetPos) {
 
         Stopwatch sw = new Stopwatch();
         sw.Start();
@@ -29,7 +31,7 @@ public class Pathfinding : MonoBehaviour
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
 
-        if (startNode.walkable && targetNode.walkable) {
+        if ( targetNode.walkable) {
             Heap<Node> openSet = new Heap<Node>(grid.MaxSize);
             HashSet<Node> closedSet = new HashSet<Node>();
 
@@ -72,7 +74,7 @@ public class Pathfinding : MonoBehaviour
             waypoints = RetracePath(startNode, targetNode);
             pathSuccess = waypoints.Length > 0;
         }
-        requestManager.FinishedProcessingPath(waypoints, pathSuccess);
+        requestManager.FinishedProcessingPath(waypoints, pathSuccess, grid);
     }
 
     Vector3[] RetracePath(Node startNode, Node endNode) {
@@ -94,16 +96,17 @@ public class Pathfinding : MonoBehaviour
         Vector2 directionOld = Vector2.zero;
 
         for (int i = 1; i < path.Count; i++) {
-            Vector2 directionNew = new Vector2(path[i-1].gridX - path[i].gridX, path[i-1].gridY - path[i].gridY);
-            if (directionNew != directionOld) {
+            // Vector2 directionNew = new Vector2(path[i-1].gridX - path[i].gridX, path[i-1].gridY - path[i].gridY);
+            // if (directionNew != directionOld) {
                 waypoints.Add(path[i].worldPosition);
-            }
-            directionOld = directionNew;
+            // }
+            // directionOld = directionNew;
         }
         return waypoints.ToArray();
     }
 
-    int GetDistance(Node nodeA, Node nodeB) {
+
+    public int GetDistance(Node nodeA, Node nodeB) {
         int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
         int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
 
@@ -112,5 +115,18 @@ public class Pathfinding : MonoBehaviour
         }
 
         return 14*dstX + 10 * (dstY-dstX);
+    }
+
+    public static int GetDistance(Vector3 nodeA, Vector3 nodeB)
+    {
+        int dstX = Mathf.Abs(Mathf.RoundToInt(nodeA.x) - Mathf.RoundToInt(nodeB.x));
+        int dstY = Mathf.Abs(Mathf.RoundToInt(nodeA.z) - Mathf.RoundToInt(nodeB.z));
+
+        if (dstX > dstY)
+        {
+            return 14 * dstY + 10 * (dstX - dstY);
+        }
+
+        return 14 * dstX + 10 * (dstY - dstX);
     }
 }
