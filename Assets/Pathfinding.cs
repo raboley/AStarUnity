@@ -70,6 +70,7 @@ public class Pathfinding : MonoBehaviour
         yield return null;
         if (pathSuccess) {
             waypoints = RetracePath(startNode, targetNode);
+            pathSuccess = waypoints.Length > 0;
         }
         requestManager.FinishedProcessingPath(waypoints, pathSuccess);
     }
