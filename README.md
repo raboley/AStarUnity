@@ -38,4 +38,15 @@ Done!
 
 ## Implementation
 
-The implementation is A* Algorithm using a Heap to store the openset, and a PathfindingRequestManager to handle multiple requests at a time. The Grid is generated based on the A* Object in unity, that is a plane the size of the map, and then the unwalkable layer is added to objects that are unwalkable. Then as Pathfinding goes through the list of Nodes it will generate a list of lowest cost moves to get to the destination, and when the path is found, it reverses that path to get the route the unit should take. Units then move toward the target until it is reached.
+The implementation is A* Algorithm using a Heap to store the openset, and a PathfindingRequestManager to handle multiple requests at a time. 
+The Grid is generated based on the A* Object in unity, that is a plane the size of the map, and then the unwalkable layer is added to objects 
+that are unwalkable. Then as Pathfinding goes through the list of Nodes it will generate a list of lowest cost moves to get to the destination, 
+and when the path is found, it reverses that path to get the route the unit should take. Units then move toward the target until it is reached.
+
+### Map is Unknown
+
+The goal here is to generate a new map based on where the character starts, and where it ends. It should then try to take the most direct path to get
+there, and should not know about any collision information.
+
+New Grid Generator given a start and an End. It should create a completely square grid. With the returned grid of all walkable tiles. The bot should then
+be able to take that grid and attempt to walk to it.
