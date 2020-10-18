@@ -10,6 +10,7 @@ The Goals of this project are to create an implementation that works in Unity an
 ### Individual Features
 
 1. Given a starting point and an end point travel from Start -> End
+1. If the Map Is unknown, Create a map the size of the points between start and end.
 1. If obstacles are discovered on the way, Record Obstacles and re-calculate path.
 1. Create Explore mode that finds the Edges of a map recording them somewhere that can be drawn in unity later.
 1. Add understanding of Zones, so that a character can record when it has traveled to a different zone and mark zone boundaries on the map.
@@ -27,3 +28,14 @@ The Goals of this project are to create an implementation that works in Unity an
 
 1. Follow Party Leader
 1. Entire Party Rests when 1 Party member rests.
+
+## How to Run
+
+To run this locally download Unity and open this folder in it.
+After that click play and you should see multiple units called Seekers moving toward a Target.
+
+Done! 
+
+## Implementation
+
+The implementation is A* Algorithm using a Heap to store the openset, and a PathfindingRequestManager to handle multiple requests at a time. The Grid is generated based on the A* Object in unity, that is a plane the size of the map, and then the unwalkable layer is added to objects that are unwalkable. Then as Pathfinding goes through the list of Nodes it will generate a list of lowest cost moves to get to the destination, and when the path is found, it reverses that path to get the route the unit should take. Units then move toward the target until it is reached.
